@@ -8,11 +8,12 @@ import (
 )
 
 type DBConfig struct {
-	DSN string // Data Source Name
+	DSN string
 }
 
 type AppConfig struct {
-	DB DBConfig
+	DB          DBConfig
+	ENVIRONMENT string
 	// Add other config sections here (e.g., Server, Auth)
 }
 
@@ -24,6 +25,9 @@ func Load() {
 	if err != nil {
 		log.Println("Error loading .env file")
 	}
+
+	// Application configuration
+	Config.ENVIRONMENT = os.Getenv("ENVIRONMENT")
 
 	// Database configuration
 	Config.DB = DBConfig{

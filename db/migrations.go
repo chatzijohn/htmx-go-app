@@ -3,6 +3,8 @@ package db
 import (
 	"database/sql"
 	"log"
+	"my-app/config"
+	"strings"
 )
 
 // Migrate runs all database migrations
@@ -30,5 +32,8 @@ func Migrate(db *sql.DB) error {
 	}
 
 	log.Println("Database migration completed")
+	if strings.ToLower(config.Config.ENVIRONMENT) == "development" {
+		return Seed(db)
+	}
 	return nil
 }
