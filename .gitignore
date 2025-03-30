@@ -1,0 +1,17 @@
+# devenv and nix
+.direnv
+.devenv
+.envrc
+devenv.*
+*.flake.*
+*.nix
+
+# environment
+.env
+
+# temporary directories
+tmp
+
+# sqlite3 database
+*.db
+*.sqlite
