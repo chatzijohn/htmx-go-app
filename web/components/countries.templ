@@ -1,0 +1,17 @@
+package components
+
+import "my-app/models"
+
+templ CountryList(countries []models.Country) {
+	<div id="country-list" class="country-list">
+		for _, country := range countries {
+			<div class="country-item">
+				<a
+					href={ templ.SafeURL("/country" + country.Name) }
+				>{ country.Name }</a>
+				<p>Capital: { country.Capital }</p>
+				<p>Continent: { country.Continent }</p>
+			</div>
+		}
+	</div>
+}

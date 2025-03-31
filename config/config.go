@@ -11,15 +11,18 @@ type DBConfig struct {
 	DSN string
 }
 
+type ServerConfig struct {
+	PORT string
+}
+
 type AppConfig struct {
 	DB          DBConfig
 	ENVIRONMENT string
+	SERVER      ServerConfig
 	// Add other config sections here (e.g., Server, Auth)
 }
 
-var Config AppConfig
-
-func Load() {
+func Load() *AppConfig {
 
 	err := godotenv.Load()
 	if err != nil {
@@ -27,11 +30,19 @@ func Load() {
 	}
 
 	// Application configuration
-	Config.ENVIRONMENT = os.Getenv("ENVIRONMENT")
+	environment := os.Getenv("ENVIRONMENT")
+
+	// Server configuration
+	server := ServerConfig{
+
+		PORT: os.Getenv("PORT"),
+	}
 
 	// Database configuration
-	Config.DB = DBConfig{
+	db := DBConfig{
 		DSN: os.Getenv("DB"),
 	}
+
+	return &AppConfig{ENVIRONMENT: environment, DB: db, SERVER: server}
 
 }
