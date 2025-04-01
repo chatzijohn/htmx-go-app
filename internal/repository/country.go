@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"my-app/models"
+	"my-app/internal/models"
 )
 
 type CountryRepository struct {
