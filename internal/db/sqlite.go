@@ -14,8 +14,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func InitDB() (*sql.DB, error) {
-	cfg := config.Load() // TODO: PASS THE CFG FROM SERVER INSTEAD OF HERE
+func ConnectDB(cfg *config.AppConfig) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", cfg.DB.DSN)
 	if err != nil {
 		return nil, err

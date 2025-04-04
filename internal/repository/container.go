@@ -4,14 +4,14 @@ import (
 	"database/sql"
 )
 
-// RepositoryBase is a container for all repositories in the application.
-type RepositoryBase struct {
+// RepositoryContainer is a container for all repositories in the application.
+type RepositoryContainer struct {
 	CountryRepository *CountryRepository
 }
 
-// NewRepositoryBase initializes all repositories and returns a container.
-func NewRepositoryBase(db *sql.DB) *RepositoryBase {
-	return &RepositoryBase{
+// NewRepositoryContainer initializes all repositories and returns a container.
+func NewRepositoryContainer(db *sql.DB) *RepositoryContainer {
+	return &RepositoryContainer{
 		CountryRepository: NewCountryRepository(db),
 	}
 }
