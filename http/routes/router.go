@@ -1,13 +1,20 @@
 package routes
 
 import (
+	"context"
 	"log"
-	"my-app/config"
 	"my-app/http/handlers"
+	"my-app/internal/config"
 	"net/http"
 )
 
-func Router() {
+type HttpRouter struct {
+	Cancel  context.CancelFunc
+	Context context.Context
+	Config  *config.ServerConfig
+}
+
+func NewRouter() *HttpRouter {
 	cfg := config.Load()
 
 	mux := http.NewServeMux()
@@ -16,6 +23,8 @@ func Router() {
 	mux.HandleFunc("GET /", handlers.CountryList)
 	mux.HandleFunc("GET /country/{name}", handlers.CountryDetail)
 
-	log.Printf("Server listening on :%s", cfg.SERVER.PORT)
-	log.Fatal(http.ListenAndServe(":"+cfg.SERVER.PORT, mux))
+	log.Printf("Server listening on :%s", cfg.PORT)
+	log.Fatal(http.ListenAndServe(":"+cfg.PORT, mux))
+
+	return &HttpRouter{}
 }

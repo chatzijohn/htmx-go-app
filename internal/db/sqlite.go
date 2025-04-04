@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"my-app/config"
+	"my-app/internal/config"
 	"my-app/pkg/data"
 
 	"github.com/google/uuid"
@@ -15,7 +15,7 @@ import (
 )
 
 func InitDB() (*sql.DB, error) {
-	cfg := config.Load()
+	cfg := config.Load() // TODO: PASS THE CFG FROM SERVER INSTEAD OF HERE
 	db, err := sql.Open("sqlite3", cfg.DB.DSN)
 	if err != nil {
 		return nil, err
