@@ -12,6 +12,11 @@ devenv.*
 # temporary directories
 tmp
 
-# sqlite3 database
-*.db
+# SQLite files
 *.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+sqlite-*
+**/*.sqlite
+**/sqlite-*
