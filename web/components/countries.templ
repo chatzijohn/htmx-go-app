@@ -1,8 +1,8 @@
 package components
 
-import "my-app/internal/model"
+import "my-app/internal/models"
 
-templ CountryList(countries []model.Country) {
+templ CountryList(countries []models.Country) {
 	<div id="country-list" class="country-list">
 		for _, country := range countries {
 			<div class="country-item">

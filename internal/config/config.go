@@ -13,6 +13,7 @@ type DBConfig struct {
 
 type ServerConfig struct {
 	PORT string
+	HOST string
 }
 
 type AppConfig struct {
@@ -34,8 +35,8 @@ func Load() *AppConfig {
 
 	// Server configuration
 	server := ServerConfig{
-
-		PORT: os.Getenv("PORT"),
+		HOST: getEnvWithDefault("HOST", "127.0.0.1"),
+		PORT: getEnvWithDefault("PORT", "8080"),
 	}
 
 	// Database configuration
@@ -45,4 +46,12 @@ func Load() *AppConfig {
 
 	return &AppConfig{ENVIRONMENT: environment, DB: db, SERVER: server}
 
+}
+
+// Helper function to get env with fallback
+func getEnvWithDefault(key, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultValue
 }

@@ -1,8 +1,8 @@
 package data
 
-import "my-app/internal/model"
+import "my-app/internal/models"
 
-var Countries = []model.Country{
+var Countries = []models.Country{
 	{
 		Name:      "United States",
 		Code:      "US",

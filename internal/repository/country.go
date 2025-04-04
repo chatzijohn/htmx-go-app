@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"my-app/internal/model"
+	"my-app/internal/models"
 )
 
 type CountryRepository struct {
@@ -15,7 +15,7 @@ func NewCountryRepository(db *sql.DB) *CountryRepository {
 	return &CountryRepository{db: db}
 }
 
-func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*model.Country, error) {
+func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*models.Country, error) {
 	query := "SELECT id, name, code, capital, continent FROM countries"
 
 	rows, err := r.db.QueryContext(ctx, query)
@@ -24,17 +24,18 @@ func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*model.Countr
 	}
 	defer rows.Close()
 
-	var countries []*model.Country
+	countries := []*models.Country{}
 
 	for rows.Next() {
-		var country model.Country
+		country := &models.Country{}
+
 		// Scan the result into the country struct (in the same order as the query)
 		if err := rows.Scan(&country.ID, &country.Name, &country.Code, &country.Capital, &country.Continent); err != nil {
 			return nil, fmt.Errorf("could not scan row: %v", err)
 		}
 
 		// Append the country to the slice (using pointer)
-		countries = append(countries, &country)
+		countries = append(countries, country)
 	}
 
 	// Check for errors after iterating over rows
