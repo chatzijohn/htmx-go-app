@@ -6,7 +6,7 @@ templ Layout(children ...templ.Component) {
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<script src="/web/static/js/htmx.min.js"></script>
+			// <script src="../static/js/htmx.min.js"></script>
 			<title>The Spending Log Thingy</title>
 			<!--
                 This line is literally why we created the layout component.
@@ -14,7 +14,7 @@ templ Layout(children ...templ.Component) {
             -->
 			<link href="/web/static/css/tailwind.css" rel="stylesheet"/>
 		</head>
-		<body class="bg-pink-600 rounded-md">
+		<body>
 			for _, child := range children {
 				@child
 			}

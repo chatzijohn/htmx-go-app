@@ -5,6 +5,10 @@
 devenv.*
 *.flake.*
 *.nix
+devenv.local.nix
+
+# pre-commit
+.pre-commit-config.yaml
 
 # environment
 .env
@@ -23,3 +27,5 @@ sqlite-*
 
 # js stuff
 node_modules
+
+
