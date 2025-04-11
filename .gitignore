@@ -20,3 +20,6 @@ tmp
 sqlite-*
 **/*.sqlite
 **/sqlite-*
+
+# js stuff
+node_modules

@@ -2,7 +2,7 @@ package components
 
 import "my-app/internal/models"
 
-templ CountryDetails(country *models.Country) {
+templ Country(country *models.Country) {
 	<div class="p-6 max-w-4xl mx-auto">
 		<h1 class="text-2xl font-bold mb-4">{ country.Name }</h1>
 		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
@@ -13,4 +13,8 @@ templ CountryDetails(country *models.Country) {
 			</article>
 		</div>
 	</div>
+}
+
+templ CountryDetails(country *models.Country) {
+	@Layout(Country(country))
 }

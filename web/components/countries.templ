@@ -2,7 +2,7 @@ package components
 
 import "my-app/internal/models"
 
-templ CountryList(countries []*models.Country) {
+templ Countries(countries []*models.Country) {
 	<div class="p-6 max-w-4xl mx-auto">
 		<h1 class="text-2xl font-bold mb-4">Countries</h1>
 		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
@@ -19,4 +19,8 @@ templ CountryList(countries []*models.Country) {
 			}
 		</div>
 	</div>
+}
+
+templ CountryList(countries []*models.Country) {
+	@Layout(Countries(countries))
 }
