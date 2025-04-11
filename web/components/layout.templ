@@ -1,0 +1,23 @@
+package components
+
+templ Layout(children ...templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<script src="/web/static/js/htmx.min.js"></script>
+			<title>The Spending Log Thingy</title>
+			<!--
+                This line is literally why we created the layout component.
+                Actually having a standard html thing is why, but yeah it's what it's!
+            -->
+			<link href="/web/static/css/tailwind.css" rel="stylesheet"/>
+		</head>
+		<body>
+			for _, child := range children {
+				@child
+			}
+		</body>
+	</html>
+}

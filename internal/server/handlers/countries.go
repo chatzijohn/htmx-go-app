@@ -36,13 +36,19 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
-	log.Println("Received request to get countries")
+	log.Printf("Received request to get country: %s \n", r.PathValue("name"))
 	ctx := r.Context()
 
 	country, err := h.service.GetCountry(ctx, r.PathValue("name"))
 	if err != nil {
 		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
 		log.Printf("Error fetching countries: %v", err)
+		return
+	}
+
+	// If not found, return 404
+	if country == nil {
+		http.NotFound(w, r)
 		return
 	}
 
