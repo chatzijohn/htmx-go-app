@@ -47,3 +47,23 @@ func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*models.Count
 	return countries, nil
 
 }
+
+func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*models.Country, error) {
+	query := "SELECT id, name, code, capital, continent FROM countries WHERE name = $1"
+	// Create an empty Country struct to hold the fetched data
+	country := &models.Country{}
+
+	// Execute the query using QueryRow
+	err := r.db.QueryRowContext(ctx, query, name).Scan(&country.ID, &country.Name, &country.Code, &country.Capital, &country.Continent)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// Return nil if no country found
+			return nil, nil
+		}
+		// Return error if there is a problem with executing the query
+		return nil, fmt.Errorf("could not fetch country: %v", err)
+	}
+
+	// Return the slice of countries
+	return country, nil
+}

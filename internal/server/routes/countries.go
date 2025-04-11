@@ -2,19 +2,23 @@ package routes
 
 import (
 	"my-app/internal/server/handlers"
+	"my-app/internal/service"
 	"net/http"
 )
 
-type Handler struct{}
-
-func NewCountryHandler() *Handler {
-	return &Handler{}
+type CountryRoutes struct {
+	handler *handlers.CountryHandler
 }
 
-func (h *Handler) RegisterCountryRoutes() *http.ServeMux {
-	r := http.NewServeMux()
+func NewCountryRoutes(service *service.CountryService) *CountryRoutes {
+	return &CountryRoutes{
+		handler: handlers.NewCountryHandler(service),
+	}
+}
 
-	r.HandleFunc("GET /", handlers.GetCountries)
-	r.HandleFunc("GET /{id}/", handlers.GetCountry)
-	return r
+func (c *CountryRoutes) Register() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", c.handler.GetCountries)
+	mux.HandleFunc("GET /{name}", c.handler.GetCountry)
+	return mux
 }
