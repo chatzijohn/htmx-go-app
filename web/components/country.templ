@@ -4,14 +4,12 @@ import "my-app/internal/models"
 
 templ Country(country *models.Country) {
 	<div class="p-6 max-w-4xl mx-auto">
-		<h1 class="text-2xl font-bold mb-4">{ country.Name }</h1>
-		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-			<article class="border rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-				<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
-				<p class="text-sm text-gray-600">Continent: { country.Continent }</p>
-				<p class="text-sm text-gray-600">Code: { country.Code }</p>
-			</article>
-		</div>
+		<article class="border rounded-xl p-4 shadow-sm">
+			<h1 class="text-2xl font-bold mb-4">{ country.Name }</h1>
+			<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
+			<p class=" text-gray-600">Continent: { country.Continent }</p>
+			<p class="text-sm text-gray-600">Code: { country.Code }</p>
+		</article>
 	</div>
 }
 

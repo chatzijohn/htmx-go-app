@@ -3,11 +3,11 @@ package components
 import "my-app/internal/models"
 
 templ Countries(countries []*models.Country) {
-	<div>
+	<div class="bg-red-50">
 		<h1 class="text-2xl mb-4">Countries</h1>
 		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
 			for _, country := range countries {
-				<div class="flex justify-items-center items-center">
+				<div class="flex flex-col">
 					<h2 class="text-lg font-semibold">
 						<a class="hover:underline" href={ templ.SafeURL("/countries/" + country.Name) }>
 							{ country.Name }

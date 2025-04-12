@@ -2,9 +2,9 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./web/components/*.templ'],
+  content: ['./web/**/*.{go,js,templ,html}'],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: ['@tailwindcss/postcss'],
 }
