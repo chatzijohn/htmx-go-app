@@ -3,13 +3,18 @@ package components
 import "my-app/internal/models"
 
 templ Country(country *models.Country) {
-	<div class="p-6 max-w-4xl mx-auto">
-		<article class="border rounded-xl p-4 shadow-sm">
-			<h1 class="text-2xl font-bold mb-4">{ country.Name }</h1>
-			<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
-			<p class=" text-gray-600">Continent: { country.Continent }</p>
-			<p class="text-sm text-gray-600">Code: { country.Code }</p>
-		</article>
+	<div class=" h-dvh p-5">
+		<a href="/countries/" class="bg-black hover:border-black hover:bg-white hover:text-black border-2 text-white font-bold py-2 px-4 rounded-md">
+			Back
+		</a>
+		<div class=" flex flex-col justify-center max-h-fit p-6 max-w-4xl mx-auto">
+			<article class="border rounded-xl p-4 shadow-sm">
+				<h1 class="text-2xl font-bold mb-4">{ country.Name }</h1>
+				<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
+				<p class=" text-gray-600">Continent: { country.Continent }</p>
+				<p class="text-sm text-gray-600">Code: { country.Code }</p>
+			</article>
+		</div>
 	</div>
 }
 
