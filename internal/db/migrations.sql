@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS countries (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Search Optimization
+CREATE INDEX idx_country_name ON countries(name);

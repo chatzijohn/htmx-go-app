@@ -67,3 +67,9 @@ func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*mod
 	// Return the slice of countries
 	return country, nil
 }
+
+func (r *CountryRepository) FindCountries(ctx context.Context, name string) ([]*models.Country, error) {
+	query := "SELECT id, name, code, capital, continent FROM countries WHERE name = $1"
+	countries := []*models.Country{}
+	return countries, nil
+}

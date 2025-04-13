@@ -14,7 +14,13 @@ templ Layout(children ...templ.Component) {
             -->
 			<link href="/web/static/css/tailwind.css" rel="stylesheet"/>
 		</head>
-		<body>
+		<body
+			hx-boost="true"
+			hx-target="body"
+			hx-swap="innerHTML"
+			hx-push-url="true"
+			class="min-h-screen"
+		>
 			for _, child := range children {
 				@child
 			}

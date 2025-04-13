@@ -3,9 +3,13 @@ package components
 import "my-app/internal/models"
 
 templ Countries(countries []*models.Country) {
-	<div class=" h-dvh p-5">
-		<h1 class="text-2xl mb-4">Countries</h1>
-		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+	<div class="h-dvh p-5">
+		<div class="flex mb-4 gap-2">
+			<h1 class="text-2xl justify-start rounded-lg">Countries</h1>
+			<label for="country-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+			<input id="country-search" type="search" class="block justify-end border-2"/>
+		</div>
+		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 			for _, country := range countries {
 				<div class="flex flex-col rounded-md items-center border-2">
 					<h2 class="text-lg ">
