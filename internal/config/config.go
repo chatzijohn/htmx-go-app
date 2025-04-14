@@ -41,7 +41,7 @@ func Load() *AppConfig {
 
 	// Database configuration
 	db := DBConfig{
-		DSN: os.Getenv("DB"),
+		DSN: os.Getenv("DB") + "?_journal=WAL&_foreign_keys=on&_busy_timeout=5000",
 	}
 
 	return &AppConfig{ENVIRONMENT: environment, DB: db, SERVER: server}

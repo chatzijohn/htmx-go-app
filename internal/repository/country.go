@@ -68,8 +68,46 @@ func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*mod
 	return country, nil
 }
 
-func (r *CountryRepository) FindCountries(ctx context.Context, name string) ([]*models.Country, error) {
-	query := "SELECT id, name, code, capital, continent FROM countries WHERE name = $1"
+func (r *CountryRepository) FindCountries(ctx context.Context, name string, limit int) ([]*models.Country, error) {
+	// Validate input parameters
+	if limit <= 0 {
+		limit = 10 // Default limit
+	} else if limit > 100 {
+		limit = 100 // Maximum limit to prevent excessive results
+	}
+
+	query := `
+        SELECT id, name, code, capital, continent 
+        FROM countries 
+        WHERE name ILIKE $1 || '%' 
+        LIMIT $2`
+
+	rows, err := r.db.QueryContext(ctx, query, name, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query countries: %w", err)
+	}
+	defer rows.Close()
+
 	countries := []*models.Country{}
+
+	for rows.Next() {
+		var country models.Country
+		err := rows.Scan(
+			&country.ID,
+			&country.Name,
+			&country.Code,
+			&country.Capital,
+			&country.Continent,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan country row: %w", err)
+		}
+		countries = append(countries, &country)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
+	}
+
 	return countries, nil
 }

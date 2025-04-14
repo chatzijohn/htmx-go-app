@@ -28,7 +28,7 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render Templ component
-	err = components.CountryList(countries).Render(ctx, w)
+	err = components.Countries(countries).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Templ render error: %v", err)
@@ -54,6 +54,33 @@ func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
 
 	// Render Templ component
 	err = components.CountryDetails(country).Render(ctx, w)
+	if err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		log.Printf("Templ render error: %v", err)
+	}
+}
+
+func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
+
+	query := r.FormValue("query")
+	log.Printf("Received request to get country: %s \n", query)
+	ctx := r.Context()
+
+	countries, err := h.service.SearchCountry(ctx, query, 10)
+	if err != nil {
+		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
+		log.Printf("Error fetching countries: %v", err)
+		return
+	}
+
+	// If not found, return 404
+	if countries == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Render Templ component
+	err = components.CountryList(countries).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Templ render error: %v", err)

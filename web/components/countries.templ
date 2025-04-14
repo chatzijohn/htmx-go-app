@@ -2,29 +2,31 @@ package components
 
 import "my-app/internal/models"
 
-templ Countries(countries []*models.Country) {
-	<div class="h-dvh p-5">
-		<div class="flex mb-4 gap-2">
-			<h1 class="text-2xl justify-start rounded-lg">Countries</h1>
-			<label for="country-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
-			<input id="country-search" type="search" class="block justify-end border-2"/>
-		</div>
-		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-			for _, country := range countries {
-				<div class="flex flex-col rounded-md items-center border-2">
-					<h2 class="text-lg ">
-						<a class="hover:underline" href={ templ.SafeURL("/countries/" + country.Name) }>
-							{ country.Name }
-						</a>
-					</h2>
-					<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
-					<p class="text-sm text-gray-600">Continent: { country.Continent }</p>
-				</div>
-			}
-		</div>
+templ CountryList(countries []*models.Country) {
+	<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" id="country-list">
+		for _, country := range countries {
+			<div class="flex flex-col rounded-md items-center border-2">
+				<h2 class="text-lg ">
+					<a class="hover:underline" href={ templ.SafeURL("/countries/" + country.Name) }>
+						{ country.Name }
+					</a>
+				</h2>
+				<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
+				<p class="text-sm text-gray-600">Continent: { country.Continent }</p>
+			</div>
+		}
 	</div>
 }
 
-templ CountryList(countries []*models.Country) {
-	@Layout(Countries(countries))
+templ Countries(countries []*models.Country) {
+	<input
+		id="country-search"
+		name="query"
+		type="search"
+		class="block justify-end border-2"
+		hx-post="/countries/search"
+		hx-trigger="keyup changed delay:0.5s"
+		hx-target="#country-list"
+	/>
+	@Layout(CountryList(countries))
 }
