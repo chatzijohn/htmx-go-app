@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"my-app/internal/models"
 	"my-app/internal/service"
 	"my-app/web/components"
 
@@ -63,13 +64,25 @@ func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
 func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 
 	query := r.FormValue("query")
-	log.Printf("Received request to get country: %s \n", query)
 	ctx := r.Context()
+	var countries []*models.Country
+	var err error
+	if query == "" {
+		// Return all countries when search is empty
+		countries, err = h.service.GetCountries(r.Context())
+	} else {
+		log.Printf("Received request to get country: %s \n", query)
 
-	countries, err := h.service.SearchCountry(ctx, query, 10)
+		countries, err = h.service.SearchCountry(ctx, query, 10)
+		if err != nil {
+			http.Error(w, "Failed to get countries", http.StatusInternalServerError)
+			log.Printf("Error fetching countries: %v", err)
+			return
+		}
+	}
+
 	if err != nil {
-		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
-		log.Printf("Error fetching countries: %v", err)
+		// error handling
 		return
 	}
 

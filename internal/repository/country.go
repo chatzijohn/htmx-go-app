@@ -77,10 +77,10 @@ func (r *CountryRepository) FindCountries(ctx context.Context, name string, limi
 	}
 
 	query := `
-        SELECT id, name, code, capital, continent 
-        FROM countries 
-        WHERE name ILIKE $1 || '%' 
-        LIMIT $2`
+		SELECT id, name, code, capital, continent 
+		FROM countries 
+		WHERE name LIKE $1 || '%' COLLATE NOCASE
+		LIMIT $2`
 
 	rows, err := r.db.QueryContext(ctx, query, name, limit)
 	if err != nil {
