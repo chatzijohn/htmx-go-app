@@ -15,8 +15,8 @@ func NewHomeRoutes() *HomeRoutes {
 	}
 }
 
-func (h *HomeRoutes) Register(mux *http.ServeMux) *http.ServeMux {
-
+func (h *HomeRoutes) Register() *http.ServeMux {
+	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", h.handler.GetHome) // GET
 	return mux
 }
