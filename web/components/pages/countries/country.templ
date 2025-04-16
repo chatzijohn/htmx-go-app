@@ -1,6 +1,7 @@
-package components
+package pages
 
 import "my-app/internal/models"
+import "my-app/web/components/layout"
 
 templ Country(country *models.Country) {
 	<div class=" h-dvh p-5">
@@ -19,5 +20,5 @@ templ Country(country *models.Country) {
 }
 
 templ CountryDetails(country *models.Country) {
-	@Layout(Country(country))
+	@layout.Base(Country(country))
 }

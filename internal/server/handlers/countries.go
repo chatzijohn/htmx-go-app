@@ -4,7 +4,7 @@ import (
 	"log"
 	"my-app/internal/models"
 	"my-app/internal/service"
-	"my-app/web/components"
+	pages "my-app/web/components/pages/countries"
 
 	"net/http"
 )
@@ -29,7 +29,7 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render Templ component
-	err = components.Countries(countries).Render(ctx, w)
+	err = pages.Countries(countries).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Templ render error: %v", err)
@@ -54,7 +54,7 @@ func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render Templ component
-	err = components.CountryDetails(country).Render(ctx, w)
+	err = pages.CountryDetails(country).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Templ render error: %v", err)
@@ -93,7 +93,7 @@ func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render Templ component
-	err = components.CountryList(countries).Render(ctx, w)
+	err = pages.CountryList(countries).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Templ render error: %v", err)

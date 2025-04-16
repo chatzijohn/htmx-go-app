@@ -1,12 +1,13 @@
-package components
+package layout
 
-templ Layout(children ...templ.Component) {
+templ Base(children ...templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<script src="/web/static/js/htmx.min.js"></script>
+			<script defer src="/web/static/js/alpine.min.js"></script>
 			<title>The Spending Log Thingy</title>
 			<!--
                 This line is literally why we created the layout component.

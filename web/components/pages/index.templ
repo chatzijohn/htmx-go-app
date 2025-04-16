@@ -1,10 +1,12 @@
 // components/index.templ
-package components
+package pages
+
+import "my-app/web/components/layout"
 
 templ main() {
 	<main>something in main</main>
 }
 
 templ Index() {
-	@Layout(main())
+	@layout.Base(main())
 }
