@@ -16,8 +16,8 @@ func NewCountryRoutes(service *service.CountryService) *CountryRoutes {
 	}
 }
 
-func (c *CountryRoutes) Register() *http.ServeMux {
-	mux := http.NewServeMux()
+func (c *CountryRoutes) Register(mux *http.ServeMux) *http.ServeMux {
+
 	mux.HandleFunc("GET /", c.handler.GetCountries)
 	mux.HandleFunc("GET /{name}", c.handler.GetCountry)
 	mux.HandleFunc("POST /search", c.handler.SearchCountry)

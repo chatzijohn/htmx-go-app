@@ -14,9 +14,9 @@ func New(serverConfig *config.ServerConfig, services *service.ServiceContainer) 
 	staticFs := http.FileServer(http.Dir("./web/static"))
 	mux.Handle("/web/static/", http.StripPrefix("/web/static/", staticFs))
 
-	// Your other route(s)
-	countryRoutes := routes.NewCountryRoutes(services.CountryService)
-	mux.Handle("/countries/", http.StripPrefix("/countries", countryRoutes.Register()))
+	// Register application routes from central router
+	appRouter := routes.NewRouter(services)
+	appRouter.RegisterRoutes(mux)
 
 	return mux
 }
