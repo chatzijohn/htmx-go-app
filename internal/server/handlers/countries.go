@@ -38,11 +38,11 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 
 func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
 
-	name := r.PathValue("name") // assumes Go 1.22+ PathValue
-	log.Printf("Received request to get country: %s\n", name)
+	slug := r.PathValue("slug") // assumes Go 1.22+ PathValue
+	log.Printf("Received request to get country: %s\n", slug)
 	ctx := r.Context()
 
-	country, err := h.service.GetCountry(ctx, name)
+	country, err := h.service.GetCountry(ctx, slug)
 	if err != nil {
 		http.Error(w, "Failed to get country", http.StatusInternalServerError)
 		log.Printf("Error fetching country: %v", err)
@@ -63,7 +63,7 @@ func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
 
 func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 
-	query := r.FormValue("query")
+	query := r.FormValue("slug")
 	ctx := r.Context()
 	var countries []*models.Country
 	var err error
