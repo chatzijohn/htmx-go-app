@@ -32,9 +32,6 @@ templ Top() {
 			<template x-for="(message, index) in messages" :key="index">
 				<div class="mx-8 flex items-center">
 					<span x-text="message" class="text-lg font-medium text-gray-700 dark:text-gray-300"></span>
-					<svg class="ml-2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
-					</svg>
 				</div>
 			</template>
 		</div>
