@@ -4,6 +4,7 @@ import (
 	"my-app/internal/models"
 	"my-app/web/components/layout"
 	"my-app/web/components/pages/countries/modals"
+	"my-app/web/components/pages/countries/tables"
 )
 
 templ Toolbar() {
@@ -11,10 +12,7 @@ templ Toolbar() {
 		@SearchInput()
 		<!-- Wrap both buttons in a horizontal flex container -->
 		<div class="flex items-center gap-2 m-2 md:m-0">
-			@modals.Test()
-			<a class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors bg-white border rounded-md hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none">
-				Add a Country
-			</a>
+			@modals.Create()
 		</div>
 	</div>
 }
@@ -28,7 +26,7 @@ templ SearchInput() {
 			id="country-search"
 			name="query"
 			type="search"
-			class="block border-2 p-2 outline-none"
+			class="block bg-slate-50 inset-shadow-md border-1 p-2 outline-none"
 			hx-post="/countries/search"
 			hx-trigger="keyup changed delay:200ms"
 			hx-target="#country-list"
@@ -40,18 +38,8 @@ templ SearchInput() {
 
 templ CountryList(countries []*models.Country) {
 	<div id="country-list">
-		<div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-2">
-			for _, country := range countries {
-				<div class="flex flex-col rounded-md items-center border-2">
-					<h2 class="text-lg ">
-						<a class="hover:underline" href={ templ.SafeURL("/countries/" + country.Name) }>
-							{ country.Name }
-						</a>
-					</h2>
-					<p class="text-sm text-gray-600">Capital: { country.Capital }</p>
-					<p class="text-sm text-gray-600">Continent: { country.Continent }</p>
-				</div>
-			}
+		<div class="p-2 ">
+			@tables.Countries(countries)
 		</div>
 	</div>
 }

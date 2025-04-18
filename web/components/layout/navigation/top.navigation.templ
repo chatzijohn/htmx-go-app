@@ -3,23 +3,23 @@ package navigation
 templ Top() {
 	<nav
 		x-data="{ open: false, mobileOpen: false }"
-		class="bg-gray-800 text-white shadow-lg sticky top-0 z-50"
+		class="bg-slate-50/45 text-slate-800 shadow-sm sticky top-0 backdrop-blur-md z-50"
 	>
 		<!-- Desktop Navbar -->
 		<div class="container mx-auto px-4">
 			<div class="flex justify-between items-center h-16">
 				<!-- Logo/Brand -->
-				<div class="flex-shrink-0">
-					<a href="/" class="text-xl font-bold">Spending Log</a>
+				<div class="flex-shrink-0 ">
+					<a href="/" class="text-xl font-bold ease-in-out hover:text-slate-700">Spending Log</a>
 				</div>
 				<!-- Desktop Menu Items -->
 				<div class="hidden md:flex space-x-4">
-					<a href="/" class="px-3 py-2 rounded-md hover:bg-gray-700">Home</a>
-					<a href="/countries" class="px-3 py-2 rounded-md hover:bg-gray-700">Countries</a>
+					<a href="/" class="px-3 py-2 ease-in-out rounded-md hover:bg-slate-200">Home</a>
+					<a href="/countries" class="px-3 py-2 rounded-md ease-in-out hover:bg-slate-200">Countries</a>
 					<div x-data="{ dropdownOpen: false }" class="relative">
 						<button
 							@click="dropdownOpen = !dropdownOpen"
-							class="px-3 py-2 rounded-md hover:bg-gray-700 flex items-center"
+							class="px-3 py-2 ease-in-out rounded-md hover:bg-slate-200 flex items-center"
 						>
 							More
 							<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@ templ Top() {
 						<div
 							x-show="dropdownOpen"
 							@click.away="dropdownOpen = false"
-							class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-1 z-50"
+							class="absolute right-0 mt-2 w-48 bg-white text-slate-800 rounded-md shadow-lg py-1 z-50"
 						>
 							<a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
 							<a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
