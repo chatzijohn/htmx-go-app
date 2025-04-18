@@ -49,7 +49,7 @@ func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*models.Count
 }
 
 func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*models.Country, error) {
-	query := "SELECT id, name, code, capital, continent FROM countries WHERE name = $1"
+	query := "SELECT id, name, code, capital, continent FROM countries WHERE name LIKE $1 COLLATE NOCASE"
 	// Create an empty Country struct to hold the fetched data
 	country := &models.Country{}
 

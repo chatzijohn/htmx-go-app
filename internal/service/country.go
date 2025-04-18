@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"my-app/internal/models"
 	"my-app/internal/repository"
 	"my-app/internal/utils"
@@ -29,6 +30,7 @@ func (s *CountryService) GetCountry(ctx context.Context, slug string) (*models.C
 	if err != nil {
 		return nil, fmt.Errorf("error while trying to normalize %s, %w", slug, err)
 	}
+	log.Printf("normalizedName: %s", normalizedName)
 	country, err := s.repo.FetchCountry(ctx, normalizedName)
 
 	if err != nil {

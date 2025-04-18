@@ -1,0 +1,26 @@
+package countries
+
+templ create() {
+	<h3>Add a Country</h3>
+	<div>
+		<form hx-post="/countries">
+			<div class="form-group">
+				<label>Country Name</label>
+				<input type="text" class="form-control" name="name"/>
+			</div>
+			<div class="form-group">
+				<label>Country Code</label>
+				<input type="text" class="form-control" name="code"/>
+			</div>
+			<div class="form-group">
+				<label>Capital Name</label>
+				<input type="text" class="form-control" name="capital"/>
+			</div>
+			<div class="form-group">
+				<label>Continent</label>
+				<input type="text" class="form-control" name="continent"/>
+			</div>
+			<button class="btn primary">Submit</button>
+		</form>
+	</div>
+}

@@ -1,8 +1,8 @@
 package marquee
 
 templ Top() {
-  <div
-    x-data="{
+	<div
+		x-data="{
       messages: [
         '🌟 New feature released! Check out version 2.0',
         '🎉 Special offer: 30% discount this week only',
@@ -11,31 +11,28 @@ templ Top() {
         '💡 Pro tip: Try our new keyboard shortcuts'
       ]
     }"
-    class="relative overflow-hidden bg-gray-50 py-4"
-  >
-    <!-- Left fade -->
-    <div class="absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-gray-50 to-transparent"></div>
-
-    <!-- Right fade -->
-    <div class="absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-gray-50 to-transparent"></div>
-
-    <!-- Marquee track -->
-    <div class="marquee-track hover:pause-animation" x-ref="marqueeContainer">
-      <div class="flex gap-x-20 animate-scroll whitespace-nowrap">
-        <!-- Original messages -->
-        <template x-for="(message, index) in messages" :key="index">
-          <div class="flex items-center px-4">
-            <span x-text="message" class="text-md font-medium text-gray-700 dark:text-gray-300"></span>
-          </div>
-        </template>
-
-        <!-- Duplicate messages for seamless scroll -->
-        <template x-for="(message, index) in messages" :key="'dup-' + index">
-          <div class="flex items-center px-4">
-            <span x-text="message" class="text-md font-medium text-gray-700 dark:text-gray-300"></span>
-          </div>
-        </template>
-      </div>
-    </div>
-  </div>
+		class="relative overflow-hidden bg-gray-50 py-2"
+	>
+		<!-- Left fade -->
+		<div class="absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-gray-50 to-transparent"></div>
+		<!-- Right fade -->
+		<div class="absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-gray-50 to-transparent"></div>
+		<!-- Marquee track -->
+		<div class="marquee-track hover:pause-animation" x-ref="marqueeContainer">
+			<div class="flex gap-x-20 animate-scroll whitespace-nowrap">
+				<!-- Original messages -->
+				<template x-for="(message, index) in messages" :key="index">
+					<div class="flex items-center px-2">
+						<span x-text="message" class="text-md font-medium text-gray-700 dark:text-gray-300"></span>
+					</div>
+				</template>
+				<!-- Duplicate messages for seamless scroll -->
+				<template x-for="(message, index) in messages" :key="'dup-' + index">
+					<div class="flex items-center px-2">
+						<span x-text="message" class="text-sm font-medium text-gray-700 dark:text-gray-300"></span>
+					</div>
+				</template>
+			</div>
+		</div>
+	</div>
 }

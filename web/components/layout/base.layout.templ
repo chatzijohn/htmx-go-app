@@ -5,7 +5,7 @@ import "my-app/web/components/layout/marquee"
 
 templ Base(children ...templ.Component) {
 	<!DOCTYPE html>
-	<html lang="en" >
+	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -23,7 +23,7 @@ templ Base(children ...templ.Component) {
 			hx-target="body"
 			hx-swap="innerHTML"
 			hx-push-url="true"
-	
+			class="min-h-dvh flex flex-col"
 		>
 			@marquee.Top()
 			@navigation.Top()
