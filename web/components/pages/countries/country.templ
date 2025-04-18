@@ -1,11 +1,11 @@
-package pages
+package countries
 
 import "my-app/internal/models"
 import "my-app/web/components/layout"
 
 templ Country(country *models.Country) {
 	<div class=" h-dvh p-5">
-		<a href="/countries/" class="bg-black hover:border-black hover:bg-white hover:text-black border-2 text-white font-bold py-2 px-4 rounded-md">
+		<a href="/countries/" class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors bg-white border rounded-md hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none">
 			Back
 		</a>
 		<div class=" flex flex-col justify-center max-h-fit p-6 max-w-4xl mx-auto">
