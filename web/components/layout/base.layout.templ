@@ -1,27 +1,32 @@
 package layout
 
+import "my-app/web/components/layout/navigation"
+import "my-app/web/components/layout/marquee"
+
 templ Base(children ...templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<script src="/web/static/js/htmx.min.js"></script>
-			<script defer src="/web/static/js/alpine.min.js"></script>
+			<script src="/static/js/htmx.min.js"></script>
+			<script defer src="/static/js/alpine.min.js"></script>
 			<title>The Spending Log Thingy</title>
 			<!--
                 This line is literally why we created the layout component.
                 Actually having a standard html thing is why, but yeah it's what it's!
             -->
-			<link href="/web/static/css/tailwind.css" rel="stylesheet"/>
+			<link href="/static/css/tailwind.css" rel="stylesheet"/>
 		</head>
 		<body
 			hx-boost="true"
 			hx-target="body"
 			hx-swap="innerHTML"
 			hx-push-url="true"
-			class="min-h-screen"
+			class="min-h-dvh flex flex-col"
 		>
+			@marquee.Top()
+			@navigation.Top()
 			for _, child := range children {
 				@child
 			}

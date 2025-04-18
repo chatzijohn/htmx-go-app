@@ -8,6 +8,9 @@ package layout
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "my-app/web/components/layout/navigation"
+import "my-app/web/components/layout/marquee"
+
 func Base(children ...templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -29,7 +32,15 @@ func Base(children ...templ.Component) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><script src=\"/web/static/js/htmx.min.js\"></script><script defer src=\"/web/static/js/alpine.min.js\"></script><title>The Spending Log Thingy</title><!--\n                This line is literally why we created the layout component.\n                Actually having a standard html thing is why, but yeah it's what it's!\n            --><link href=\"/web/static/css/tailwind.css\" rel=\"stylesheet\"></head><body hx-boost=\"true\" hx-target=\"body\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"min-h-screen\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><script src=\"/static/js/htmx.min.js\"></script><script defer src=\"/static/js/alpine.min.js\"></script><title>The Spending Log Thingy</title><!--\n                This line is literally why we created the layout component.\n                Actually having a standard html thing is why, but yeah it's what it's!\n            --><link href=\"/static/css/tailwind.css\" rel=\"stylesheet\"></head><body hx-boost=\"true\" hx-target=\"body\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"min-h-dvh flex flex-col\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = marquee.Top().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = navigation.Top().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

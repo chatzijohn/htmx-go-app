@@ -5,6 +5,7 @@
 devenv.*
 *.flake.*
 *.nix
+devenv.yaml
 devenv.local.nix
 
 # pre-commit
@@ -31,3 +32,12 @@ node_modules
 # Ignore all _templ.go files in the web/components directory
 web/components/*_templ.go
 
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml

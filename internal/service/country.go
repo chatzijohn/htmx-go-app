@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"my-app/internal/models"
 	"my-app/internal/repository"
 	"my-app/internal/utils"
@@ -24,15 +25,16 @@ func (s *CountryService) GetCountries(ctx context.Context) ([]*models.Country, e
 	return countries, nil
 }
 
-func (s *CountryService) GetCountry(ctx context.Context, name string) (*models.Country, error) {
-	normalizedName, err := utils.NormalizeCountryName(name)
+func (s *CountryService) GetCountry(ctx context.Context, slug string) (*models.Country, error) {
+	normalizedName, err := utils.NormalizeCountryName(slug)
 	if err != nil {
-		return nil, fmt.Errorf("error while trying to normalize %s, %w", name, err)
+		return nil, fmt.Errorf("error while trying to normalize %s, %w", slug, err)
 	}
+	log.Printf("normalizedName: %s", normalizedName)
 	country, err := s.repo.FetchCountry(ctx, normalizedName)
 
 	if err != nil {
-		return nil, fmt.Errorf("error while fetching %s, %w", name, err)
+		return nil, fmt.Errorf("error while fetching %s, %w", slug, err)
 	}
 	return country, nil
 }

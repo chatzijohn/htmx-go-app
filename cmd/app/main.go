@@ -36,7 +36,7 @@ func run(ctx context.Context, w io.Writer, args []string) error {
 	services := service.NewServiceContainer(repos)
 
 	// Initialize server with services
-	srv := server.New(&cfg.SERVER, services)
+	srv := server.New(cfg, services)
 
 	httpServer := &http.Server{
 		Addr:    net.JoinHostPort(cfg.SERVER.HOST, cfg.SERVER.PORT),

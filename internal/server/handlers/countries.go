@@ -18,6 +18,7 @@ func NewCountryHandler(svc *service.CountryService) *CountryHandler {
 }
 
 func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("Received request to get countries")
 	ctx := r.Context()
 
@@ -28,7 +29,6 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Render Templ component
 	err = pages.Countries(countries).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
@@ -37,23 +37,23 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Received request to get country: %s \n", r.PathValue("name"))
+
+	slug := r.PathValue("slug")
+	log.Printf("Received request to get country: %s\n", slug)
 	ctx := r.Context()
 
-	country, err := h.service.GetCountry(ctx, r.PathValue("name"))
+	country, err := h.service.GetCountry(ctx, slug)
 	if err != nil {
-		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
-		log.Printf("Error fetching countries: %v", err)
+		http.Error(w, "Failed to get country", http.StatusInternalServerError)
+		log.Printf("Error fetching country: %v", err)
 		return
 	}
 
-	// If not found, return 404
 	if country == nil {
 		http.NotFound(w, r)
 		return
 	}
 
-	// Render Templ component
 	err = pages.CountryDetails(country).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
@@ -67,32 +67,25 @@ func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var countries []*models.Country
 	var err error
-	if query == "" {
-		// Return all countries when search is empty
-		countries, err = h.service.GetCountries(r.Context())
-	} else {
-		log.Printf("Received request to get country: %s \n", query)
 
+	if query == "" {
+		countries, err = h.service.GetCountries(ctx)
+	} else {
+		log.Printf("Received request to search countries with query: %s\n", query)
 		countries, err = h.service.SearchCountry(ctx, query, 10)
-		if err != nil {
-			http.Error(w, "Failed to get countries", http.StatusInternalServerError)
-			log.Printf("Error fetching countries: %v", err)
-			return
-		}
 	}
 
 	if err != nil {
-		// error handling
+		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
+		log.Printf("Error fetching countries: %v", err)
 		return
 	}
 
-	// If not found, return 404
 	if countries == nil {
 		http.NotFound(w, r)
 		return
 	}
 
-	// Render Templ component
 	err = pages.CountryList(countries).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
