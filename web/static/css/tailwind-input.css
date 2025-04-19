@@ -1,8 +1,13 @@
 /* static/css/style.css */
 @import 'tailwindcss';
 
-@layer utilities {
+@theme {
+  --breakpoint-xs: 22rem;
+  --breakpoint-2xl: 100rem;
+  --breakpoint-3xl: 120rem;
+}
 
+@layer utilities {
   input[type='search']::-webkit-search-decoration,
   input[type='search']::-webkit-search-cancel-button,
   input[type='search']::-webkit-search-results-button,

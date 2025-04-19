@@ -9,17 +9,34 @@ templ Top() {
 		<div class="container mx-auto px-4">
 			<div class="flex justify-between items-center h-16">
 				<!-- Logo/Brand -->
-				<div class="flex-shrink-0 ">
+				<div class="flex-shrink-0">
 					<a href="/" class="text-xl font-bold ease-in-out hover:text-slate-700">Spending Log</a>
 				</div>
 				<!-- Desktop Menu Items -->
 				<div class="hidden md:flex space-x-4">
-					<a href="/" class="px-3 py-2 ease-in-out rounded-md hover:bg-slate-200">Home</a>
-					<a href="/countries" class="px-3 py-2 rounded-md ease-in-out hover:bg-slate-200">Countries</a>
+					<a
+						href="/"
+						hx-get="/"
+						hx-target="body"
+						hx-swap="outerHTML"
+						class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md hover:bg-neutral-100"
+					>
+						Home
+					</a>
+					<a
+						href="/countries"
+						hx-get="/countries"
+						hx-target="body"
+						hx-swap="outerHTML"
+						class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors border-neutral-200 rounded-md hover:bg-neutral-100"
+					>
+						Countries
+					</a>
+					<!-- Dropdown Menu -->
 					<div x-data="{ dropdownOpen: false }" class="relative">
 						<button
 							@click="dropdownOpen = !dropdownOpen"
-							class="px-3 py-2 ease-in-out rounded-md hover:bg-slate-200 flex items-center"
+							class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md hover:bg-neutral-100"
 						>
 							More
 							<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +57,7 @@ templ Top() {
 				<div class="md:hidden">
 					<button
 						@click="mobileOpen = !mobileOpen"
-						class="p-2 rounded-md hover:bg-gray-700 focus:outline-none"
+						class="p-2 rounded-md hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-300"
 					>
 						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path x-show="!mobileOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -54,7 +71,7 @@ templ Top() {
 		<div
 			x-show="mobileOpen"
 			@click.away="mobileOpen = false"
-			class="md:hidden bg-gray-700"
+			class="md:hidden bg-white border-t border-neutral-200"
 			x-transition:enter="transition ease-out duration-100"
 			x-transition:enter-start="opacity-0 scale-95"
 			x-transition:enter-end="opacity-100 scale-100"
@@ -62,10 +79,14 @@ templ Top() {
 			x-transition:leave-start="opacity-100 scale-100"
 			x-transition:leave-end="opacity-0 scale-95"
 		>
-			<div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-				<a href="/" class="block px-3 py-2 rounded-md hover:bg-gray-600">Home</a>
-				<a href="/countries" class="block px-3 py-2 rounded-md hover:bg-gray-600">Countries</a>
-				<a href="#" class="block px-3 py-2 rounded-md hover:bg-gray-600">Settings</a>
+			<div class="px-4 py-3 space-y-1">
+				<a href="/" hx-get="/" hx-target="body" hx-swap="outerHTML" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-neutral-100 rounded-md">
+					Home
+				</a>
+				<a href="/countries" hx-get="/countries" hx-target="body" hx-swap="outerHTML" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-neutral-100 rounded-md">
+					Countries
+				</a>
+				<a href="#" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-neutral-100 rounded-md">Settings</a>
 			</div>
 		</div>
 	</nav>

@@ -8,10 +8,10 @@ import (
 )
 
 templ Toolbar() {
-	<div class="flex flex-col m-2 mb-0 gap-2 items-center justify-between md:flex-row">
+	<div class="flex flex-col xs:flex-row m-2 mb-0 gap-2 items-center justify-between ">
 		@SearchInput()
 		<!-- Wrap both buttons in a horizontal flex container -->
-		<div class="flex items-center gap-2 m-2 md:m-0">
+		<div class="flex items-center gap-2  w-max xs:w-auto m-2">
 			@modals.Create()
 		</div>
 	</div>
@@ -19,34 +19,30 @@ templ Toolbar() {
 
 templ SearchInput() {
 	<div class="flex items-center gap-2">
-		<label for="country-search" class="block text-sm font-medium mb-1">
-			Search countries
-		</label>
 		<input
 			id="country-search"
 			name="query"
 			type="search"
-			class="block bg-slate-50 inset-shadow-md border-1 p-2 outline-none"
+			class=" bg-slate-50 inset-shadow-md border border-neutral-200 p-2 rounded-md outline-none"
 			hx-post="/countries/search"
+			hx-swap="outerHTML"
 			hx-trigger="keyup changed delay:200ms"
 			hx-target="#country-list"
 			hx-push-url="false"
-			placeholder="Type country name..."
+			placeholder="Search country..."
 		/>
 	</div>
 }
 
-templ CountryList(countries []*models.Country) {
-	<div id="country-list">
-		<div class="p-2 ">
-			@tables.Countries(countries)
-		</div>
+templ CountryList(countries []*models.Country, prevCursor string, nextCursor string) {
+	<div id="country-list" class="min-h-0 m-2 rounded-md shadow-md border border-neutral-200 overflow-hidden">
+		@tables.Countries(countries, prevCursor, nextCursor)
 	</div>
 }
 
-templ Countries(countries []*models.Country) {
+templ Countries(countries []*models.Country, prevCursor string, nextCursor string) {
 	@layout.Base(
 		Toolbar(),
-		CountryList(countries),
+		CountryList(countries, prevCursor, nextCursor),
 	)
 }

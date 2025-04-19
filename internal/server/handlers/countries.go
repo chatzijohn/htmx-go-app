@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"log"
-	"my-app/internal/models"
 	"my-app/internal/service"
+	"my-app/internal/utils"
 	countriesPage "my-app/web/components/pages/countries"
+	"strings"
 
 	"net/http"
 )
@@ -18,18 +19,29 @@ func NewCountryHandler(svc *service.CountryService) *CountryHandler {
 }
 
 func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
-
 	log.Println("Received request to get countries")
 	ctx := r.Context()
 
-	countries, err := h.service.GetCountries(ctx)
+	pageSizeStr := r.URL.Query().Get("pageSize")
+	encodedCursor := r.URL.Query().Get("cursor")
+
+	countries, nextCursor, prevCursor, err := h.service.GetCountries(ctx, encodedCursor, pageSizeStr)
 	if err != nil {
 		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
 		log.Printf("Error fetching countries: %v", err)
 		return
 	}
 
-	err = countriesPage.Countries(countries).Render(ctx, w)
+	log.Printf("Fetched %d countries, nextCursor: %q", len(countries), nextCursor)
+
+	// Always render the main Countries page only on initial load
+	if encodedCursor == "" && pageSizeStr == "" {
+		err = countriesPage.Countries(countries, prevCursor, nextCursor).Render(ctx, w)
+	} else {
+		// For pagination / HTMX, just update the list
+		err = countriesPage.CountryList(countries, prevCursor, nextCursor).Render(ctx, w)
+	}
+
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Templ render error: %v", err)
@@ -62,33 +74,23 @@ func (h *CountryHandler) GetCountry(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
-
-	query := r.FormValue("query")
 	ctx := r.Context()
-	var countries []*models.Country
-	var err error
+	query := strings.TrimSpace(r.FormValue("query"))
 
-	if query == "" {
-		countries, err = h.service.GetCountries(ctx)
-	} else {
-		log.Printf("Received request to search countries with query: %s\n", query)
-		countries, err = h.service.SearchCountry(ctx, query, 10)
-	}
+	// Optional: make limit configurable via query param
 
+	countries, err := h.service.SearchCountry(ctx, query, utils.DefaultPageSize)
 	if err != nil {
-		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
-		log.Printf("Error fetching countries: %v", err)
+		http.Error(w, "Failed to search countries", http.StatusInternalServerError)
+		log.Printf("Search error (query=%q): %v", query, err)
 		return
 	}
 
-	if countries == nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	err = countriesPage.CountryList(countries).Render(ctx, w)
+	// Render partial country list for HTMX response
+	err = countriesPage.CountryList(countries, "", "").Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
-		log.Printf("Templ render error: %v", err)
+		log.Printf("Render error (query=%q): %v", query, err)
+		return
 	}
 }

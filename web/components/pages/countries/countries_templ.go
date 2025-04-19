@@ -36,7 +36,7 @@ func Toolbar() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col m-2 mb-0 gap-2 items-center justify-between md:flex-row\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col xs:flex-row m-2 mb-0 gap-2 items-center justify-between \">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,7 +44,7 @@ func Toolbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<!-- Wrap both buttons in a horizontal flex container --><div class=\"flex items-center gap-2 m-2 md:m-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<!-- Wrap both buttons in a horizontal flex container --><div class=\"flex items-center gap-2  w-max xs:w-auto m-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,7 +81,7 @@ func SearchInput() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"flex items-center gap-2\"><label for=\"country-search\" class=\"block text-sm font-medium mb-1\">Search countries</label> <input id=\"country-search\" name=\"query\" type=\"search\" class=\"block bg-slate-50 inset-shadow-md border-1 p-2 outline-none\" hx-post=\"/countries/search\" hx-trigger=\"keyup changed delay:200ms\" hx-target=\"#country-list\" hx-push-url=\"false\" placeholder=\"Type country name...\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"flex items-center gap-2\"><input id=\"country-search\" name=\"query\" type=\"search\" class=\" bg-slate-50 inset-shadow-md border border-neutral-200 p-2 rounded-md outline-none\" hx-post=\"/countries/search\" hx-swap=\"outerHTML\" hx-trigger=\"keyup changed delay:200ms\" hx-target=\"#country-list\" hx-push-url=\"false\" placeholder=\"Search country...\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -89,7 +89,7 @@ func SearchInput() templ.Component {
 	})
 }
 
-func CountryList(countries []*models.Country) templ.Component {
+func CountryList(countries []*models.Country, prevCursor string, nextCursor string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -110,15 +110,15 @@ func CountryList(countries []*models.Country) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div id=\"country-list\"><div class=\"p-2 \">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div id=\"country-list\" class=\"min-h-0 m-2 rounded-md shadow-md border border-neutral-200 overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = tables.Countries(countries).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = tables.Countries(countries, prevCursor, nextCursor).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -126,7 +126,7 @@ func CountryList(countries []*models.Country) templ.Component {
 	})
 }
 
-func Countries(countries []*models.Country) templ.Component {
+func Countries(countries []*models.Country, prevCursor string, nextCursor string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -149,7 +149,7 @@ func Countries(countries []*models.Country) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = layout.Base(
 			Toolbar(),
-			CountryList(countries),
+			CountryList(countries, prevCursor, nextCursor),
 		).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

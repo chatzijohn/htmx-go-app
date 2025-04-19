@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"my-app/internal/models"
+
+	"github.com/rs/xid"
 )
 
 type CountryRepository struct {
@@ -15,37 +17,54 @@ func NewCountryRepository(db *sql.DB) *CountryRepository {
 	return &CountryRepository{db: db}
 }
 
-func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*models.Country, error) {
-	query := "SELECT id, name, code, capital, continent FROM countries"
+func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.CountryCursor, pageSize int) ([]*models.Country, *models.CountryCursor, error) {
+	query := `
+		SELECT id, name, code, capital, continent
+		FROM countries
+		WHERE ((id > $1 AND name = $2) OR name > $2)
+		ORDER BY name, id
+		LIMIT $3;`
 
-	rows, err := r.db.QueryContext(ctx, query)
+	cursorID := xid.ID{}
+	cursorName := ""
+	if cursor != nil {
+		cursorID = cursor.ID
+		cursorName = cursor.Name
+	}
+
+	// Fetch pageSize + 1 to detect if there's a next page
+	rows, err := r.db.QueryContext(ctx, query, cursorID, cursorName, pageSize+1)
 	if err != nil {
-		return nil, fmt.Errorf("could not execute query: %v", err)
+		return nil, nil, fmt.Errorf("could not execute query: %v", err)
 	}
 	defer rows.Close()
 
-	countries := []*models.Country{}
+	var countries []*models.Country
 
 	for rows.Next() {
-		country := &models.Country{}
-
-		// Scan the result into the country struct (in the same order as the query)
-		if err := rows.Scan(&country.ID, &country.Name, &country.Code, &country.Capital, &country.Continent); err != nil {
-			return nil, fmt.Errorf("could not scan row: %v", err)
+		c := &models.Country{}
+		if err := rows.Scan(&c.ID, &c.Name, &c.Code, &c.Capital, &c.Continent); err != nil {
+			return nil, nil, fmt.Errorf("scan error: %v", err)
 		}
-
-		// Append the country to the slice (using pointer)
-		countries = append(countries, country)
+		countries = append(countries, c)
 	}
 
-	// Check for errors after iterating over rows
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating over rows: %v", err)
+		return nil, nil, fmt.Errorf("rows iteration error: %v", err)
 	}
 
-	// Return the slice of countries
-	return countries, nil
+	// Determine if there's a next page
+	var nextCursor *models.CountryCursor
+	if len(countries) > pageSize {
+		last := countries[pageSize] // this is the extra one
+		nextCursor = &models.CountryCursor{
+			ID:   last.ID,
+			Name: last.Name,
+		}
+		countries = countries[:pageSize] // trim to actual pageSize
+	}
 
+	return countries, nextCursor, nil
 }
 
 func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*models.Country, error) {

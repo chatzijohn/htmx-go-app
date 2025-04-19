@@ -28,9 +28,11 @@ templ Base(children ...templ.Component) {
 		>
 			@marquee.Top()
 			@navigation.Top()
-			for _, child := range children {
-				@child
-			}
+			<div class="flex flex-col flex-1 min-h-0">
+				for _, child := range children {
+					@child
+				}
+			</div>
 		</body>
 	</html>
 }
