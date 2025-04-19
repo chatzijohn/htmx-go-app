@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS countries (
 );
 
 -- Search Optimization
-CREATE INDEX IF NOT EXISTS idx_country_name ON countries(name);
+CREATE INDEX idx_countries_name_id ON countries(name, id);

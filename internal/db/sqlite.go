@@ -10,8 +10,8 @@ import (
 	"my-app/internal/config"
 	"my-app/pkg/data"
 
-	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/rs/xid"
 )
 
 func ConnectDB(cfg *config.AppConfig) (*sql.DB, error) {
@@ -72,8 +72,8 @@ func Seed(db *sql.DB) error {
 	defer stmt.Close()
 
 	for _, country := range data.Countries {
-		// Generate UUID
-		country.ID = uuid.New()
+		// Generate XID
+		country.ID = xid.New()
 
 		_, err := stmt.Exec(country.ID, country.Name, country.Code, country.Capital, country.Continent)
 		if err != nil {

@@ -3,11 +3,11 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/rs/xid"
 )
 
 type Country struct {
-	ID        uuid.UUID `json:"id"`
+	ID        xid.ID    `json:"id"`
 	Name      string    `json:"name"`
 	Code      string    `json:"code"`
 	Capital   string    `json:"capital"`
