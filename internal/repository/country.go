@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"my-app/internal/models"
+
+	"github.com/rs/xid"
 )
 
 type CountryRepository struct {
@@ -15,37 +17,90 @@ func NewCountryRepository(db *sql.DB) *CountryRepository {
 	return &CountryRepository{db: db}
 }
 
-func (r *CountryRepository) FetchCountries(ctx context.Context) ([]*models.Country, error) {
-	query := "SELECT id, name, code, capital, continent FROM countries"
+func (r *CountryRepository) FetchCountries(ctx context.Context, limit int, cursor string, isNext bool) ([]*models.Country, xid.ID, xid.ID, error) {
+	// Validate limit
+	if limit <= 0 {
+		limit = 10 // Default limit
+	} else if limit > 100 {
+		limit = 100 // Maximum limit to prevent excessive results
+	}
 
-	rows, err := r.db.QueryContext(ctx, query)
+	var query string
+	var args []interface{}
+
+	// If cursor is provided, we need to fetch records after (next) or before (previous) the cursor
+	if cursor != "" {
+		if isNext {
+			// Fetch records after the cursor (next)
+			query = `
+				SELECT id, name, code, capital, continent
+				FROM countries
+				WHERE name > $1
+				ORDER BY name ASC
+				LIMIT $2`
+			args = append(args, cursor, limit)
+		} else {
+			// Fetch records before the cursor (previous)
+			query = `
+				SELECT id, name, code, capital, continent
+				FROM countries
+				WHERE name < $1
+				ORDER BY name DESC
+				LIMIT $2`
+			args = append(args, cursor, limit)
+		}
+	} else {
+		// If no cursor, fetch the first page (ordering by name)
+		query = `
+			SELECT id, name, code, capital, continent
+			FROM countries
+			ORDER BY name ASC
+			LIMIT $1`
+		args = append(args, limit)
+	}
+
+	// Execute query
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("could not execute query: %v", err)
+		return nil, xid.ID{}, xid.ID{}, fmt.Errorf("failed to query countries: %w", err)
 	}
 	defer rows.Close()
 
-	countries := []*models.Country{}
+	var countries []*models.Country
+	var lastID xid.ID
+	var firstID xid.ID
 
 	for rows.Next() {
-		country := &models.Country{}
-
-		// Scan the result into the country struct (in the same order as the query)
+		var country models.Country
 		if err := rows.Scan(&country.ID, &country.Name, &country.Code, &country.Capital, &country.Continent); err != nil {
-			return nil, fmt.Errorf("could not scan row: %v", err)
+			return nil, xid.ID{}, xid.ID{}, fmt.Errorf("failed to scan country row: %w", err)
 		}
+		countries = append(countries, &country)
 
-		// Append the country to the slice (using pointer)
-		countries = append(countries, country)
+		// Keep track of the first and last IDs for the cursor
+		if firstID == (xid.ID{}) {
+			firstID = country.ID // first record of the page
+		}
+		lastID = country.ID // last record of the page
 	}
 
-	// Check for errors after iterating over rows
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error iterating over rows: %v", err)
+		return nil, xid.ID{}, xid.ID{}, fmt.Errorf("rows iteration error: %w", err)
 	}
 
-	// Return the slice of countries
-	return countries, nil
+	// If there are fewer than `limit` results, then there is no next page
+	var nextCursor xid.ID
+	if len(countries) == limit {
+		nextCursor = lastID
+	}
 
+	// For previous, we use the first ID of the current page
+	var prevCursor xid.ID
+	if len(countries) > 0 {
+		prevCursor = firstID
+	}
+
+	return countries, nextCursor, prevCursor, nil
 }
 
 func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*models.Country, error) {
