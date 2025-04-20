@@ -25,7 +25,7 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 	pageSizeStr := r.URL.Query().Get("pageSize")
 	encodedCursor := r.URL.Query().Get("cursor")
 
-	countries, nextCursor, prevCursor, err := h.service.GetCountries(ctx, encodedCursor, pageSizeStr)
+	countries, nextCursor, err := h.service.GetCountries(ctx, encodedCursor, pageSizeStr)
 	if err != nil {
 		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
 		log.Printf("Error fetching countries: %v", err)
@@ -36,10 +36,10 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 
 	// Always render the main Countries page only on initial load
 	if encodedCursor == "" && pageSizeStr == "" {
-		err = countriesPage.Countries(countries, prevCursor, nextCursor).Render(ctx, w)
+		err = countriesPage.Countries(countries, nextCursor).Render(ctx, w)
 	} else {
 		// For pagination / HTMX, just update the list
-		err = countriesPage.CountryList(countries, prevCursor, nextCursor).Render(ctx, w)
+		err = countriesPage.CountryList(countries, nextCursor).Render(ctx, w)
 	}
 
 	if err != nil {
@@ -87,7 +87,7 @@ func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render partial country list for HTMX response
-	err = countriesPage.CountryList(countries, "", "").Render(ctx, w)
+	err = countriesPage.CountryList(countries, "").Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Render error (query=%q): %v", query, err)
