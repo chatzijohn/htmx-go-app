@@ -69,6 +69,7 @@ func (s *CountryService) GetCountry(ctx context.Context, slug string) (*models.C
 }
 
 func (s *CountryService) SearchCountry(ctx context.Context, name string, limit int) ([]*models.Country, error) {
+
 	countries, err := s.repo.FindCountries(ctx, name, limit)
 	if err != nil {
 		return nil, err
