@@ -34,12 +34,18 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Fetched %d countries, nextCursor: %q", len(countries), nextCursor)
 
-	// Always render the main Countries page only on initial load
-	if encodedCursor == "" && pageSizeStr == "" {
-		err = countriesPage.Countries(countries, nextCursor).Render(ctx, w)
-	} else {
-		// For pagination / HTMX, just update the list
+	isHTMX := r.Header.Get("HX-Request") != ""
+
+	if isHTMX && encodedCursor != "" {
 		err = countriesPage.CountryList(countries, nextCursor).Render(ctx, w)
+	} else {
+		// Full page request: render entire layout
+		err = countriesPage.Countries(countries, nextCursor).Render(ctx, w)
+	}
+
+	if err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
+		log.Printf("Templ render error: %v", err)
 	}
 
 	if err != nil {

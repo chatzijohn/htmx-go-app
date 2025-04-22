@@ -39,8 +39,6 @@ templ PaginationControls(nextCursor string) {
 				hx-get={ "/countries?cursor=" + nextCursor }
 				hx-target="#country-list"
 				hx-swap="outerHTML"
-				hx-push-url="false"
-				hx-history="true"
 				class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 border rounded-md border-neutral-200"
 			>
 				<svg
