@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "my-app/internal/models"
 
-func Countries(countries []*models.Country, nextCursor string) templ.Component {
+func Countries(countries []*models.Country, prevCursor string, nextCursor string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -44,7 +44,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" x-init=\"console.log(countries)\" class=\"flex flex-col flex-1 min-h-0 overflow-hidden\"><div class=\"flex-1 overflow-y-auto min-h-0\"><table class=\"min-w-full table-auto\"><thead class=\"sticky top-0 z-10 bg-slate-50 border-b border-neutral-200 divide-x divide-neutral-200 text-neutral-500\"><tr><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Name</th><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Code</th><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Capital</th><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Continent</th></tr></thead> <tbody class=\"divide-y divide-neutral-200 text-neutral-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"flex flex-col flex-1 min-h-0 overflow-hidden\"><div class=\"flex-1 overflow-y-auto min-h-0\"><table class=\"min-w-full table-auto\"><thead class=\"sticky top-0 z-10 bg-slate-50 border-b border-neutral-200 divide-x divide-neutral-200 text-neutral-500\"><tr><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Name</th><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Code</th><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Capital</th><th class=\"px-2 py-3 text-xs font-medium text-left uppercase\">Continent</th></tr></thead> <tbody class=\"divide-y divide-neutral-200 text-neutral-800\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -65,7 +65,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(country.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 25, Col: 122}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 24, Col: 122}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -78,7 +78,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(country.Code)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 27, Col: 91}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 26, Col: 91}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -91,7 +91,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(country.Capital)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 28, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 27, Col: 82}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -104,7 +104,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(country.Continent)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 29, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 28, Col: 84}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -119,7 +119,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = PaginationControls(nextCursor).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = PaginationControls(prevCursor, nextCursor).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -131,7 +131,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 	})
 }
 
-func PaginationControls(nextCursor string) templ.Component {
+func PaginationControls(prevCursor string, nextCursor string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -156,26 +156,45 @@ func PaginationControls(nextCursor string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if nextCursor != "" {
+		if prevCursor != "" {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<a hx-get=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs("/countries?cursor=" + nextCursor)
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs("/countries?cursor=" + prevCursor + "&direction=previous")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 45, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 44, Col: 70}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-target=\"#country-list\" hx-swap=\"outerHTML\" class=\"flex items-center justify-center w-8 h-8 hover:bg-neutral-100 border rounded-md border-neutral-200\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-right-icon lucide-chevron-right text-slate-700\"><path d=\"m9 18 6-6-6-6\"></path></svg></a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-target=\"#country-list\" hx-swap=\"outerHTML\" class=\"flex items-center justify-center w-8 h-8 hover:bg-neutral-100 border rounded-md border-neutral-200\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-left-icon lucide-chevron-left\"><path d=\"m15 18-6-6 6-6\"></path></svg></a> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div>")
+		if nextCursor != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<a hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var10 string
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs("/countries?cursor=" + nextCursor + "&direction=next")
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/pages/countries/tables/countries.table.templ`, Line: 67, Col: 66}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-target=\"#country-list\" hx-swap=\"outerHTML\" class=\"flex items-center justify-center w-8 h-8 hover:bg-neutral-100 border rounded-md border-neutral-200\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-right-icon lucide-chevron-right text-slate-700\"><path d=\"m9 18 6-6-6-6\"></path></svg></a>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

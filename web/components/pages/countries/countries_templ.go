@@ -89,7 +89,7 @@ func SearchInput() templ.Component {
 	})
 }
 
-func CountryList(countries []*models.Country, nextCursor string) templ.Component {
+func CountryList(countries []*models.Country, prevCursor string, nextCursor string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -114,7 +114,7 @@ func CountryList(countries []*models.Country, nextCursor string) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = tables.Countries(countries, nextCursor).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = tables.Countries(countries, prevCursor, nextCursor).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -126,7 +126,7 @@ func CountryList(countries []*models.Country, nextCursor string) templ.Component
 	})
 }
 
-func Countries(countries []*models.Country, nextCursor string) templ.Component {
+func Countries(countries []*models.Country, prevCursor string, nextCursor string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -149,7 +149,7 @@ func Countries(countries []*models.Country, nextCursor string) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = layout.Base(
 			Toolbar(),
-			CountryList(countries, nextCursor),
+			CountryList(countries, prevCursor, nextCursor),
 		).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

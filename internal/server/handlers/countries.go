@@ -26,8 +26,9 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 
 	pageSizeStr := r.URL.Query().Get("pageSize")
 	encodedCursor := r.URL.Query().Get("cursor")
+	direction := r.URL.Query().Get("direction")
 
-	countries, nextCursor, err := h.service.GetCountries(ctx, encodedCursor, pageSizeStr)
+	countries, prevCursor, nextCursor, err := h.service.GetCountries(ctx, encodedCursor, pageSizeStr, direction)
 	if err != nil {
 		http.Error(w, "Failed to get countries", http.StatusInternalServerError)
 		log.Printf("Error fetching countries: %v", err)
@@ -39,10 +40,10 @@ func (h *CountryHandler) GetCountries(w http.ResponseWriter, r *http.Request) {
 	isHTMX := r.Header.Get("HX-Request") != ""
 
 	if isHTMX && encodedCursor != "" {
-		err = countriesPage.CountryList(countries, nextCursor).Render(ctx, w)
+		err = countriesPage.CountryList(countries, prevCursor, nextCursor).Render(ctx, w)
 	} else {
 		// Full page request: render entire layout
-		err = countriesPage.Countries(countries, nextCursor).Render(ctx, w)
+		err = countriesPage.Countries(countries, prevCursor, nextCursor).Render(ctx, w)
 	}
 
 	if err != nil {
@@ -86,9 +87,10 @@ func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 	query := strings.TrimSpace(r.FormValue("query"))
 	var countries []*models.Country
 	nextCursor := ""
+	prevCursor := ""
 	var err error
 	if query == "" {
-		countries, nextCursor, err = h.service.GetCountries(ctx, "", fmt.Sprint(utils.DefaultPageSize))
+		countries, prevCursor, nextCursor, err = h.service.GetCountries(ctx, "", fmt.Sprint(utils.DefaultPageSize), "next")
 		if err != nil {
 			http.Error(w, "Failed to get countries", http.StatusInternalServerError)
 			log.Printf("Error fetching countries: %v", err)
@@ -104,7 +106,7 @@ func (h *CountryHandler) SearchCountry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render partial country list for HTMX response
-	err = countriesPage.CountryList(countries, nextCursor).Render(ctx, w)
+	err = countriesPage.CountryList(countries, prevCursor, nextCursor).Render(ctx, w)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 		log.Printf("Render error (query=%q): %v", query, err)

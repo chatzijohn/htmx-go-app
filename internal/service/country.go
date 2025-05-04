@@ -18,18 +18,16 @@ func NewCountryService(repo *repository.CountryRepository) *CountryService {
 	return &CountryService{repo: repo}
 }
 
-func (s *CountryService) GetCountries(ctx context.Context, encodedCursor string, pageSizeStr string) ([]*models.Country, string, error) {
-	// Decode cursor (if present)
+func (s *CountryService) GetCountries(ctx context.Context, encodedCursor string, pageSizeStr string, direction string) ([]*models.Country, string, string, error) {
 	var decodedCursor *models.CountryCursor
 	if encodedCursor != "" {
 		cursor, err := utils.DecodeCursor[models.CountryCursor](encodedCursor)
 		if err != nil {
-			return nil, "", fmt.Errorf("invalid cursor: %w", err)
+			return nil, "", "", fmt.Errorf("invalid cursor: %w", err)
 		}
 		decodedCursor = cursor
 	}
 
-	// Parse or default page size
 	pageSize := utils.DefaultPageSize
 	if pageSizeStr != "" {
 		if ps, err := strconv.Atoi(pageSizeStr); err == nil {
@@ -37,21 +35,28 @@ func (s *CountryService) GetCountries(ctx context.Context, encodedCursor string,
 		}
 	}
 
-	// Fetch countries and encode nextCursor
-	countries, nextCursorStruct, err := s.repo.FetchCountries(ctx, decodedCursor, pageSize)
+	countries, nextCursorStruct, err := s.repo.FetchCountries(ctx, decodedCursor, pageSize, direction)
 	if err != nil {
-		return nil, "", err
+		return nil, "", "", err
 	}
 
 	var nextCursor string
 	if nextCursorStruct != nil {
 		nextCursor, err = utils.EncodeCursor(nextCursorStruct)
 		if err != nil {
-			return nil, "", fmt.Errorf("failed to encode next cursor: %w", err)
+			return nil, "", "", fmt.Errorf("failed to encode next cursor: %w", err)
 		}
 	}
 
-	return countries, nextCursor, nil
+	// 👇 Move this block inside the service
+	var prevCursor string
+	if len(countries) > 0 {
+		first := countries[0]
+		prevCursorStruct := &models.CountryCursor{ID: first.ID, Name: first.Name}
+		prevCursor, _ = utils.EncodeCursor(prevCursorStruct) // ignore error for now
+	}
+
+	return countries, nextCursor, prevCursor, nil
 }
 
 func (s *CountryService) GetCountry(ctx context.Context, slug string) (*models.Country, error) {

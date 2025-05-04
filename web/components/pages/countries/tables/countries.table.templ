@@ -2,7 +2,7 @@ package tables
 
 import "my-app/internal/models"
 
-templ Countries(countries []*models.Country, nextCursor string) {
+templ Countries(countries []*models.Country, prevCursor string, nextCursor string) {
 	<div
 		x-data={ templ.JSONString(countries) }
 		class="flex flex-col flex-1 min-h-0 overflow-hidden"
@@ -31,17 +31,40 @@ templ Countries(countries []*models.Country, nextCursor string) {
 				</tbody>
 			</table>
 		</div>
-		@PaginationControls(nextCursor)
+		@PaginationControls(prevCursor, nextCursor)
 	</div>
 }
 
-templ PaginationControls(nextCursor string) {
+templ PaginationControls(prevCursor string, nextCursor string) {
 	<div
 		class="h-12 flex justify-end p-2 items-center border-t border-neutral-200 shrink-0"
 	>
+		if prevCursor != "" {
+			<a
+				hx-get={ "/countries?cursor=" + prevCursor + "&direction=previous" }
+				hx-target="#country-list"
+				hx-swap="outerHTML"
+				class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 border rounded-md border-neutral-200"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-chevron-left-icon lucide-chevron-left"
+				>
+					<path d="m15 18-6-6 6-6"></path>
+				</svg>
+			</a>
+		}
 		if nextCursor != "" {
 			<a
-				hx-get={ "/countries?cursor=" + nextCursor }
+				hx-get={ "/countries?cursor=" + nextCursor + "&direction=next" }
 				hx-target="#country-list"
 				hx-swap="outerHTML"
 				class="flex items-center justify-center w-8 h-8 hover:bg-neutral-100 border rounded-md border-neutral-200"

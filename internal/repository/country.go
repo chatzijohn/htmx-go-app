@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"my-app/internal/models"
+	"slices"
 
 	"github.com/rs/xid"
 )
@@ -17,13 +18,9 @@ func NewCountryRepository(db *sql.DB) *CountryRepository {
 	return &CountryRepository{db: db}
 }
 
-func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.CountryCursor, pageSize int) ([]*models.Country, *models.CountryCursor, error) {
-	query := `
-		SELECT id, name, code, capital, continent
-		FROM countries
-		WHERE ((id > $1 AND name = $2) OR name > $2)
-		ORDER BY name, id
-		LIMIT $3;`
+func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.CountryCursor, pageSize int, direction string) ([]*models.Country, *models.CountryCursor, error) {
+	var query string
+	var args []interface{}
 
 	cursorID := xid.ID{}
 	cursorName := ""
@@ -32,15 +29,31 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 		cursorName = cursor.Name
 	}
 
-	// Fetch pageSize + 1 to detect if there's a next page
-	rows, err := r.db.QueryContext(ctx, query, cursorID, cursorName, pageSize+1)
+	if direction == "prev" {
+		query = `
+			SELECT id, name, code, capital, continent
+			FROM countries
+			WHERE ((id < $1 AND name = $2) OR name < $2)
+			ORDER BY name DESC, id DESC
+			LIMIT $3;`
+		args = []interface{}{cursorID, cursorName, pageSize + 1}
+	} else {
+		query = `
+			SELECT id, name, code, capital, continent
+			FROM countries
+			WHERE ((id > $1 AND name = $2) OR name > $2)
+			ORDER BY name ASC, id ASC
+			LIMIT $3;`
+		args = []interface{}{cursorID, cursorName, pageSize + 1}
+	}
+
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not execute query: %v", err)
 	}
 	defer rows.Close()
 
 	var countries []*models.Country
-
 	for rows.Next() {
 		c := &models.Country{}
 		if err := rows.Scan(&c.ID, &c.Name, &c.Code, &c.Capital, &c.Continent); err != nil {
@@ -53,15 +66,20 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 		return nil, nil, fmt.Errorf("rows iteration error: %v", err)
 	}
 
-	// Determine if there's a next page
+	if len(countries) == 0 {
+		return countries, nil, nil
+	}
+
+	// Reverse list if going backward (so it's in correct order for the UI)
+	if direction == "prev" {
+		slices.Reverse(countries) // requires Go 1.21+
+	}
+
 	var nextCursor *models.CountryCursor
 	if len(countries) > pageSize {
-		last := countries[pageSize] // this is the extra one
-		nextCursor = &models.CountryCursor{
-			ID:   last.ID,
-			Name: last.Name,
-		}
-		countries = countries[:pageSize] // trim to actual pageSize
+		last := countries[pageSize]
+		nextCursor = &models.CountryCursor{ID: last.ID, Name: last.Name}
+		countries = countries[:pageSize]
 	}
 
 	return countries, nextCursor, nil
