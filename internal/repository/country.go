@@ -20,7 +20,6 @@ func NewCountryRepository(db *sql.DB) *CountryRepository {
 
 func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.CountryCursor, pageSize int, direction string) ([]*models.Country, *models.CountryCursor, error) {
 	var query string
-	var args []interface{}
 
 	cursorID := xid.ID{}
 	cursorName := ""
@@ -29,25 +28,30 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 		cursorName = cursor.Name
 	}
 
-	if direction == "prev" {
+	if direction == "previous" {
 		query = `
 			SELECT id, name, code, capital, continent
 			FROM countries
 			WHERE ((id < $1 AND name = $2) OR name < $2)
-			ORDER BY name DESC, id DESC
+			ORDER BY name ASC, id ASC
 			LIMIT $3;`
-		args = []interface{}{cursorID, cursorName, pageSize + 1}
-	} else {
+
+	} else if direction == "next" {
 		query = `
 			SELECT id, name, code, capital, continent
 			FROM countries
 			WHERE ((id > $1 AND name = $2) OR name > $2)
 			ORDER BY name ASC, id ASC
 			LIMIT $3;`
-		args = []interface{}{cursorID, cursorName, pageSize + 1}
+
+	} else {
+		query = `
+			SELECT id, name, code, capital, continent
+			FROM countries
+			ORDER BY name ASC, id ASC;`
 	}
 
-	rows, err := r.db.QueryContext(ctx, query, args...)
+	rows, err := r.db.QueryContext(ctx, query, cursorID, cursorName, pageSize+1)
 	if err != nil {
 		return nil, nil, fmt.Errorf("could not execute query: %v", err)
 	}
@@ -72,13 +76,16 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 
 	// Reverse list if going backward (so it's in correct order for the UI)
 	if direction == "prev" {
-		slices.Reverse(countries) // requires Go 1.21+
+		slices.Reverse(countries)
 	}
 
 	var nextCursor *models.CountryCursor
 	if len(countries) > pageSize {
-		last := countries[pageSize]
-		nextCursor = &models.CountryCursor{ID: last.ID, Name: last.Name}
+		// Use the *last visible* item as the cursor for the next page
+		lastVisible := countries[pageSize-1]
+		nextCursor = &models.CountryCursor{ID: lastVisible.ID, Name: lastVisible.Name}
+
+		// Trim the extra record used to check for next page
 		countries = countries[:pageSize]
 	}
 
