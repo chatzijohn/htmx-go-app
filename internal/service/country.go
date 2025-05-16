@@ -35,7 +35,7 @@ func (s *CountryService) GetCountries(ctx context.Context, encodedCursor string,
 		}
 	}
 
-	countries, nextCursorStruct, err := s.repo.FetchCountries(ctx, decodedCursor, pageSize, direction)
+	countries, nextCursorStruct, prevCursorStruct, err := s.repo.FetchCountries(ctx, decodedCursor, pageSize, direction)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -48,12 +48,12 @@ func (s *CountryService) GetCountries(ctx context.Context, encodedCursor string,
 		}
 	}
 
-	// 👇 Move this block inside the service
 	var prevCursor string
-	if len(countries) > 0 {
-		first := countries[0]
-		prevCursorStruct := &models.CountryCursor{ID: first.ID, Name: first.Name}
-		prevCursor, _ = utils.EncodeCursor(prevCursorStruct) // ignore error for now
+	if prevCursorStruct != nil {
+		nextCursor, err = utils.EncodeCursor(prevCursorStruct)
+		if err != nil {
+			return nil, "", "", fmt.Errorf("failed to encode previous cursor: %w", err)
+		}
 	}
 
 	return countries, nextCursor, prevCursor, nil

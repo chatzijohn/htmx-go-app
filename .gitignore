@@ -31,6 +31,8 @@ node_modules
 
 # Ignore all _templ.go files in the web/components directory
 web/components/*_templ.go
+web/components/**/*_templ.go
+
 
 # Devenv
 .devenv*

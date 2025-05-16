@@ -18,7 +18,7 @@ func NewCountryRepository(db *sql.DB) *CountryRepository {
 	return &CountryRepository{db: db}
 }
 
-func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.CountryCursor, pageSize int, direction string) ([]*models.Country, *models.CountryCursor, error) {
+func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.CountryCursor, pageSize int, direction string) ([]*models.Country, *models.CountryCursor, *models.CountryCursor, error) {
 	var query string
 
 	cursorID := xid.ID{}
@@ -35,7 +35,6 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 			WHERE ((id < $1 AND name = $2) OR name < $2)
 			ORDER BY name ASC, id ASC
 			LIMIT $3;`
-
 	} else if direction == "next" {
 		query = `
 			SELECT id, name, code, capital, continent
@@ -43,7 +42,6 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 			WHERE ((id > $1 AND name = $2) OR name > $2)
 			ORDER BY name ASC, id ASC
 			LIMIT $3;`
-
 	} else {
 		query = `
 			SELECT id, name, code, capital, continent
@@ -53,7 +51,7 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 
 	rows, err := r.db.QueryContext(ctx, query, cursorID, cursorName, pageSize+1)
 	if err != nil {
-		return nil, nil, fmt.Errorf("could not execute query: %v", err)
+		return nil, nil, nil, fmt.Errorf("could not execute query: %v", err)
 	}
 	defer rows.Close()
 
@@ -61,17 +59,17 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 	for rows.Next() {
 		c := &models.Country{}
 		if err := rows.Scan(&c.ID, &c.Name, &c.Code, &c.Capital, &c.Continent); err != nil {
-			return nil, nil, fmt.Errorf("scan error: %v", err)
+			return nil, nil, nil, fmt.Errorf("scan error: %v", err)
 		}
 		countries = append(countries, c)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, nil, fmt.Errorf("rows iteration error: %v", err)
+		return nil, nil, nil, fmt.Errorf("rows iteration error: %v", err)
 	}
 
 	if len(countries) == 0 {
-		return countries, nil, nil
+		return countries, nil, nil, nil
 	}
 
 	// Reverse list if going backward (so it's in correct order for the UI)
@@ -89,7 +87,13 @@ func (r *CountryRepository) FetchCountries(ctx context.Context, cursor *models.C
 		countries = countries[:pageSize]
 	}
 
-	return countries, nextCursor, nil
+	var prevCursor *models.CountryCursor
+	if len(countries) > 0 && direction == "prev" {
+		first := countries[0]
+		prevCursor = &models.CountryCursor{ID: first.ID, Name: first.Name}
+	}
+
+	return countries, nextCursor, prevCursor, nil
 }
 
 func (r *CountryRepository) FetchCountry(ctx context.Context, name string) (*models.Country, error) {
